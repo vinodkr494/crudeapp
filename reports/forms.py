@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 class ReportResultForm(forms.Form):
     production_line = forms.ModelChoiceField(queryset=ProductionLine.objects.all())
-    day = forms.CharField
+    day = forms.CharField(widget=forms.DateTimeInput(attrs={'class':'datepicker'}))
 
 
 class ReportSelectLineForm(forms.Form):

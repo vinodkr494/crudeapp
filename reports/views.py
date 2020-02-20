@@ -9,7 +9,12 @@ from django.urls import reverse_lazy
 class SelectView(FormView):
     template_name = 'reports/select.html'
     form_class = ReportResultForm
-    success_url = reverse_lazy()
+    success_url = reverse_lazy('reports:home')
+
+    def form_valid(self, form):
+        self.request.session['day'] = self.request.POST.get('day',None)
+        print(self.request.session['day'])
+        return super(SelectView,self).form_valid(form)
 
 
     
