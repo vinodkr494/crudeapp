@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}
+   report page
+{% endblock title %}
+
+{% block content %}
+
+ <div class="row mt-5">
+   <div class="col-md-2 box-shadow">
+    <h4>Report</h4>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{rform|crispy}}
+        <button type="submit" name="btn_sub_report_form" class="btn btn-primary  w-100 "><i class="fa fa-paper-plane"></i> Send</button>
+    </form>
+    
+   </div>
+   <div class="col-md-10">
+      <div style="overflow-y:scroll; height:80vh" class="w-100 bg-ligtht">
+        <table class="table table-bordered">
+            <thead class="thead-light ">
+              <tr class="text-center">
+                <th scope="col">Day</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Product</th>
+                <th scope="col">Plan</th>
+                <th scope="col">Execution</th>
+                <th scope="col">Line</th>
+                <th scope="col">Problem</th>
+                <th scope="col">edit</th>
+                <th scope="col">delete</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {% for obj in object_list %}
+              <tr class="text-center">
+                <td> {{obj.get_day}}</td>
+                <td> {{obj.start_hour}}</td>
+                <td> {{obj.end_hour}}</td>
+                <td> {{obj.product}}</td>
+                <td> {{obj.plan}}</td>
+                <td> {{obj.execution}}</td>
+                <td> {{obj.productionline}}</td>
+                <td class="fit">
+                  <button class="btn btn-warning open-modal" data-toggle="modal" data-target="#problem-reporting" data-url="{{obj.id}}"><i class="fas fa-exclamation-triangle"></i></button>
+                </td>
+                <td class="fit">
+                  <a href="{{obj.get_absolute_url}}"><button class="btn btn-info"><i class="fas fa-edit"></i></button></a>
+                </td>
+                <td class="fit">
+                  <a href="{% url 'reports:delete_view' pk=obj.id %}"><button class="btn btn-danger"><i class="fas fa-trash"></i></button></a>
+                </td>
+               
+               
+
+
+              </tr>
+               
+              {% endfor %}
+
+            </tbody>
+        </table>
+
+      </div>
+   </div>
+ </div>
+
+   <!-- The problem reporting Modal -->
+   <div class="modal fade" id="problem-reporting">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Problem Reporting Form</h4>
+          <button type="button" class="close" data-dismiss="modal">×</button>
+        </div>
+        <form action="" method="POST">
+        <!-- Modal body -->
+        <div class="modal-body">
+            {% csrf_token %}
+            {{pform|crispy}}
+            <input type="hidden" id="report_id" name="report_id">
+         
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button class="btn btn-primary" name="btn_sub_problem_report" type="submit">Save</button>
+        </div>
+
+      </form>
+        
+      </div>
+    </div>
+  </div>
+ 
+  <!-- script for modal -->
+
+{% endblock content %}
+
+{% block script %}
+<script>
+  $('.open-modal').on('click',function(){
+    const report_id = $(this).attr('data-url');
+    $('#report_id').val(report_id);
+    console.log(report_id);
+  });
+</script>
+{% endblock script %}
